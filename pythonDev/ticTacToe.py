@@ -1,4 +1,5 @@
-'Done : 10-dec-2015'
+'Started : 10-dec-2015'
+'Done : TBD'
 'By : Remi Noel'
 
 'This python script contains the code for a tic tac toe game'
