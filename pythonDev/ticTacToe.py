@@ -9,11 +9,6 @@ theBoard = {'TOP-L': ' ', 'TOP-M': ' ', 'TOP-R': ' ',
             'MID-L': ' ', 'MID-M': ' ', 'MID-R': ' ',
             'LOW-L': ' ', 'LOW-M': ' ', 'LOW-R' : ' '}
 
-
-theBoardBlank = {'TOP-L': ' ', 'TOP-M': ' ', 'TOP-R': ' ',
-            	 'MID-L': ' ', 'MID-M': ' ', 'MID-R': ' ',
-            	 'LOW-L': ' ', 'LOW-M': ' ', 'LOW-R': ' '}
-
 playersNames = {'Player #1' : ' ', 'Player #2' : ' '}
 
 playWithComp = False
@@ -41,7 +36,7 @@ def startGame():
 	cls()
 
 def restartGame():
-	theBoard = theBoardBlank
+	theBoard.values() = ' '
 
 def whoGoesFirst():
 # Randomly choose the player who goes first.
@@ -105,7 +100,7 @@ def gameLoop():
 			while not move in theBoard.keys():
 				print("Those are the valid moves available: ")
 				pp = pprint.PrettyPrinter()
-				pp.pprint(theBoard.keys())
+				pp.pprint(theBoard.keys().sorted())
 				print("Please choose a valid move: ")
 				move = input().upper()
 				
