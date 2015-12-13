@@ -16,28 +16,31 @@ playWithComp = False
 
 def startGame():
 	letter = ''
-	print("Hello! This is a simple game of Tic-Tac-Toe. \n")
-	print("Now you may the players' names. You can also leave it blank if you want or play with a computer. \n")
-
+	print('Hello! This is a simple game of Tic-Tac-Toe. \n')
+	
 	while not (letter == 'Y' or letter == 'N'):
 		print('Do you want to play against a computer? Yes(Y) or no(N)?')
 		letter = input().upper()
 		#playWithComp = True
 		#No AI has been currently implemented. Will be done soon.
-		
-	print("Please enter the name of the player #1: ")
+	
+	print('Now you may enter the players'' names. You can also leave it blank. \n')	
+	print('Please enter the name of the player #1: ')
 	playersNames['Player #1'] = input()
 	if playWithComp == False:
-		print("Thanks " + playersNames['Player #1'] + "!\nNow may player #2 enter their name: ")
+		print('Thanks ' + playersNames['Player #1'] + '!\nNow may player #2 enter their name: ')
 		playersNames['Player #2'] = input()
-		print("Thanks " + playersNames['Player #2'] + "!\nEnjoy and good luck to both players!\n\n")
+		print('Thanks ' + playersNames['Player #2'] + '!\nEnjoy and good luck to both players!\n\n')
 	else:
-		print("Thanks " + playersNames['Player #1'] + "!\nEnjoy and good luck against the computer!")
+		print('Thanks ' + playersNames['Player #1'] + '!\nEnjoy and good luck against the computer!')
 		playersNames['Player #2'] = 'Computer'
 	cls()
 
 def restartGame():
-	theBoard.values() = ' '
+	for key in theBoard.keys():
+		theBoard[key] = ' '
+		cls()
+
 
 def whoGoesFirst():
 # Randomly choose the player who goes first.
@@ -61,29 +64,30 @@ def printBoard(board):
 	print(board['LOW-L'] + '|' + board['LOW-M'] + '|' +  board['LOW-R'])
 
 def cls():
-	print ("\n" * 100) 
+	print ('\n' * 100) 
 
 def checkBoardCase(board, move):
-	if not(board[move] == ' '):
-		print("This case has already been played! Please choose another case. \n")
+	if not(board[move] == ' ') :
+		print('This case has already been played! Please choose another case. \n')
 		return False
 	else:
 		return True
 
 def checkIfPlayerWins(board, letter):
-	return ((letter == theBoard["TOP-L"] and letter == theBoard["TOP-M"] and letter == theBoard["TOP-R"]) or 
-		(letter == theBoard["MID-L"] and letter == theBoard["MID-M"] and letter == theBoard["MID-R"]) or
-		(letter == theBoard["LOW-L"] and letter == theBoard["LOW-M"] and letter == theBoard["LOW-R"]) or	# check horizontals
-		(letter == theBoard["TOP-L"] and letter == theBoard["MID-L"] and letter == theBoard["LOW-L"]) or
-		(letter == theBoard["TOP-M"] and letter == theBoard["MID-M"] and letter == theBoard["LOW-M"]) or	# check verticals 
-		(letter == theBoard["TOP-R"] and letter == theBoard["MID-R"] and letter == theBoard["LOW-R"]) or
-		(letter == theBoard["TOP-L"] and letter == theBoard["MID-M"] and letter == theBoard["LOW-R"]) or 	# check diagonals
-		(letter == theBoard["LOW-L"] and letter == theBoard["MID-M"] and letter == theBoard["TOP-R"]))
+	return ((letter == board['TOP-L'] and letter == board['TOP-M'] and letter == board['TOP-R']) or # check horizontals Top
+			(letter == board['MID-L'] and letter == board['MID-M'] and letter == board['MID-R']) or	#					Mid
+			(letter == board['LOW-L'] and letter == board['LOW-M'] and letter == board['LOW-R']) or	#					Low
+			(letter == board['TOP-L'] and letter == board['MID-L'] and letter == board['LOW-L']) or	# check verticals 	Left
+			(letter == board['TOP-M'] and letter == board['MID-M'] and letter == board['LOW-M']) or	#				  	Mid
+			(letter == board['TOP-R'] and letter == board['MID-R'] and letter == board['LOW-R']) or	#				  	Right
+			(letter == board['TOP-L'] and letter == board['MID-M'] and letter == board['LOW-R']) or # check diagonals 	Top-L to Low-R
+			(letter == board['LOW-L'] and letter == board['MID-M'] and letter == board['TOP-R']))	#				  	Low-L to Top-R
 
 def gameLoop():	
 	moveCount = 0
 	gameState = True
 	winnerState = False
+	drawState = False
 	firstToPlay = ''
 	firstToPlay = whoGoesFirst()
 
@@ -93,46 +97,48 @@ def gameLoop():
 		turn = 'O'
 
 	while(gameState):
+		printBoard(theBoard)
+		print('\n Turn for ' + turn + '. Move on which space?')
+		move = input().upper()
+		print('\n')
 
-		for i in range(9):
+		while not move in theBoard.keys():
+			print('Those are the valid moves available: ')
+			pp = pprint.PrettyPrinter()
+			pp.pprint(sorted(theBoard.keys()))
+			print('Please choose a valid move: \n')
 			printBoard(theBoard)
-			print('Turn for ' + turn + '. Move on which space?')
 			move = input().upper()
-			while not move in theBoard.keys():
-				print("Those are the valid moves available: ")
-				pp = pprint.PrettyPrinter()
-				pp.pprint(theBoard.keys().sorted())
-				print("Please choose a valid move: ")
-				move = input().upper()
-				
-			if checkBoardCase(theBoard, move) == True:
-				theBoard[move] = turn
+			
+		if checkBoardCase(theBoard, move) == True:
+			theBoard[move] = turn
 
-				# Store the coordinates of the hit and switch players
-				if turn == 'X':
-					turn = 'O'
-				else : 
-					turn = 'X'
-				moveCount += 1
-				print(str(moveCount) + '\n')
+		# Check if someone won	
+		if moveCount >= 4:
+			if moveCount == 9:
+				print('Draw!\n')
+				drawState = True
+				gameState = decideGameState()
 
-			# Check if someone won	
-			if moveCount >= 4:
-				if moveCount == 9:
-					print('Draw!\n')
-					gameState = decideGameState()
-
+			elif drawState == False:
 				winnerState = checkIfPlayerWins(theBoard, turn)
 				if winnerState:
 					if turn == 'X':
-						print(playersNames['Player #1'] + " won! Congratulations!")
+						print(playersNames['Player #1'] + ' won! Congratulations!')
 						gameState = decideGameState()
+						moveCount = 0
 					elif turn == 'O':
-						print(playersNames['Player #2'] + " won! Congratulations!")
+						print(playersNames['Player #2'] + ' won! Congratulations!')
 						gameState = decideGameState()
+						moveCount = 0
+		# Switch players
+		if turn == 'X':
+			turn = 'O'
+		else : 
+			turn = 'X'
+		moveCount += 1
 
-		print("\n")
-		printBoard(theBoard)
+		print('\n')
 
 
 
