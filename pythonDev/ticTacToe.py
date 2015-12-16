@@ -45,8 +45,7 @@ def whoGoesFirst():
 # Randomly choose the player who goes first.
 	if random.randint(0, 1) == 0:
 		return playersNames['Player #1']
-	else:
-		return playersNames['Player #2']
+	return playersNames['Player #2']
 
 def decideGameState():
 	print('Do you want to play again? (yes or no)')
@@ -69,8 +68,7 @@ def checkBoardCase(board, move):
 	if not(board[move] == ' ') :
 		print('This case has already been played! Please choose another case. \n')
 		return False
-	else:
-		return True
+	return True
 
 def checkIfPlayerWins(board, letter):
 	return ((letter == board['TOP-L'] and letter == board['TOP-M'] and letter == board['TOP-R']) or # check horizontals Top
